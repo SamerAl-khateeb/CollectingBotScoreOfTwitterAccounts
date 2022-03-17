@@ -109,7 +109,16 @@ def main():
 
                         #adding the row to the list of output
                         CSVOutputList.append(CSVOutputRow)
-                
+                        
+                        # if you processed 500 accounts you 
+                        # reached the maximum number of requests 
+                        # allowed for the basic plan. So Sleep 
+                        # for 24 hours then continue
+                        if (count == 500):
+                                time.sleep(86400)
+                                print("Sleeping for 24 hours!")
+                                count = 0
+
                 # when you finish processing all the account 
                 # write the result to a csv file
                 write_output_to_CSV(CSVOutputList)
