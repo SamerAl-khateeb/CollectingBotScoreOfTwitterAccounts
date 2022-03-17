@@ -1,4 +1,4 @@
-# bot_scores.py                       By: Samer Al-khateeb
+# bot_score.py                       By: Samer Al-khateeb
 # a script that reads a CSV file contain twitter usernames
 # and output each username and it's bot score as returned 
 # from the Botometer API. The score will be in range [0-1]
