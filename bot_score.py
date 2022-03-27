@@ -8,6 +8,14 @@
 # account. We multiply the returned score by 100 to get a score 
 # from [0-100] instead of [0-1].
 
+# Dependencies: you might need to install the following libraries 
+# before you can run this code.
+# For Mac users, open terminal and type:
+#       python3 -m pip install botometer
+#       python3 -m pip install tweepy
+# For Windows users, open CMD and type:
+#       py -m pip install botometer
+#       py -m pip install tweepy
 
 #importing necessary modules for Botometer Library 
 import botometer
