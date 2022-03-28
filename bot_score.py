@@ -61,6 +61,9 @@ def main():
         #variable that hold the file name
         inputFilename = 'input.csv'
 
+        # counter to keep track of how many successful requests are made
+        successfulRequestsCount = 0
+
         #open the input file and read it
         with open(inputFilename, newline='', encoding='utf-8') as csvInputFile:
                 CSVFileAsList = csv.reader(csvInputFile, skipinitialspace=True)
@@ -79,6 +82,7 @@ def main():
                                 print(UserName," " , bot_score*100)
                                 # multiply the returned score by 100
                                 bot_score = bot_score * 100
+                                successfulRequestsCount = successfulRequestsCount + 1
 
                         # Tweepy Rate Limit Error Check
                         except tweepy.error.RateLimitError:
@@ -122,10 +126,10 @@ def main():
                         # reached the maximum number of requests 
                         # allowed for the basic plan. So Sleep 
                         # for 24 hours then continue
-                        if (count == 500):
+                        if (successfulRequestsCount == 500):
                                 time.sleep(86400)
                                 print("Sleeping for 24 hours!")
-                                count = 0
+                                successfulRequestsCount = 0
 
                 # when you finish processing all the account 
                 # write the result to a csv file
