@@ -24,28 +24,34 @@ import time
 import json
 import requests
 import csv
+import os
 
 
 def write_output_to_CSV(biglist):
         columnNames = ["UserName", "BotScore"]
         filename = "botScoresOutput.csv"
         # creating a file to save the output
-        with open(filename, 'w', newline='', encoding='utf-8') as csvOutputFile:
+        with open(filename, 'a', newline='', encoding='utf-8') as csvOutputFile:
+                # define a variable to check if the file is empty (of size zero)
+                fileIsEmpty = os.stat(filename).st_size == 0
+
                 # creating a csv writer object
                 csvwriter = csv.writer(csvOutputFile, delimiter=',', lineterminator='\n')
-                #write the columns headers
-                csvwriter.writerow(columnNames)
+                # if the file is empty (i.e., has size of 0) write the header or columnNames
+                if fileIsEmpty:
+                        #write the columns headers
+                        csvwriter.writerow(columnNames)
                 csvwriter.writerows(biglist)
 
 
 def main():
         ############### insert your APPs credentials below #################
-        rapidapiKey = "PasteYourRapidKeyAPIHere!"
+        rapidapiKey = "PasteYourRapidKeyAPIHere"
         twitterAppAuth = {
-                'consumer_key': 'PasteYourConsumerKeyHere!',
-                'consumer_secret': 'PasteYourConsumerSecretHere!',
-                'access_token': 'PasteYourAccessTokenHere!',
-                'access_token_secret': 'PasteYourAccessTokenSecretHere!',
+                'consumer_key': 'PasteYourConsumerKeyHere',
+                'consumer_secret': 'PasteYourConsumerSecretHere',
+                'access_token': 'PasteYourAccessTokenHere',
+                'access_token_secret': 'PasteYourAccessTokenSecretHere',
         }
         ########################################################################
         bom = botometer.Botometer(wait_on_ratelimit=True,
@@ -67,9 +73,12 @@ def main():
         #open the input file and read it
         with open(inputFilename, newline='', encoding='utf-8') as csvInputFile:
                 CSVFileAsList = csv.reader(csvInputFile, skipinitialspace=True)
-                
+
                 # skipping the first row in the csv input file
                 next(CSVFileAsList)
+
+                print("Processing the CSV Rows!")
+
                 # for each row in the CSV file send the account to the API
                 for row in CSVFileAsList:
                         UserName = row[0]
@@ -126,15 +135,21 @@ def main():
                         # reached the maximum number of requests 
                         # allowed for the basic plan. So Sleep 
                         # for 24 hours then continue
-                        if (successfulRequestsCount == 500):
-                                time.sleep(86400)
+                        if (successfulRequestsCount == 499):
+                                print("Saving the results to the CSV File!")
+                                # when you finish processing all the 500 accounts 
+                                # write the result to a csv file
+                                write_output_to_CSV(CSVOutputList)
                                 print("Sleeping for 24 hours!")
+                                time.sleep(86401)
+                                # reset the succcessful counter 
                                 successfulRequestsCount = 0
+                                # reset the output list
+                                CSVOutputList =[]
 
-                # when you finish processing all the account 
-                # write the result to a csv file
+                print("Saving the last results to the CSV File!")
+                # write whatever left to the CSV file
                 write_output_to_CSV(CSVOutputList)
-
 
 if __name__ == "__main__":
     main()
